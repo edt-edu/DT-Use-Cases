@@ -1,0 +1,10 @@
+**/.gradle/
+**/.idea/
+**/package-lock.json      # only use yarn
+**/build/
+**/target/
+yarn.lock
+**/*.log
+.npmrc
+**/.npmrc
+*.class

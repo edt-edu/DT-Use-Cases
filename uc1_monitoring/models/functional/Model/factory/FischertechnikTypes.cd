@@ -1,0 +1,29 @@
+package factory;
+
+classdiagram FischertechnikTypes {
+  public class ProductConfig {
+    + ProductConfig();
+    + ProductConfig(double drillHoleDiameter, int numberOfTeeth);
+    + double drillHoleDiameter;
+    + int numberOfTeeth;
+  }
+
+  public class GearBlank {
+    + GearBlank();
+    + GearBlank(double diameter, double width);
+    + double diameter;
+    + double width;
+  }
+
+  public class Gear /* TODO: extends GearBlank */ {
+    + Gear();
+    + Gear(double diameter, double width, double drillHoleDiameter, int numberOfTeeth, boolean hardened, boolean ground, boolean polished);
+    + double diameter;
+    + double width;
+    + double drillHoleDiameter;
+    + int numberOfTeeth;
+    + boolean hardened;
+    + boolean ground;
+    + boolean polished;
+  }
+}

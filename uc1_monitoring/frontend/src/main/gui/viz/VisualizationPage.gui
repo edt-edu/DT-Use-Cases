@@ -1,0 +1,39 @@
+/* (c) https://github.com/MontiCore/monticore */
+package viz;
+
+import FunctionStructure4Fenix.FunctionApp;
+import MonitoringDT.EnergyShadow;
+
+import base.viz.Visualization;
+import layout.DTLayout;
+import mc.fenix.arrange.GemColumn;
+import mc.fenix.arrange.GemRow;
+import mc.fenix.arrange.GemCard;
+import components.ApexTopicVisualization;
+import components.ApexEnergyDifferenceVisualization;
+
+page VisualizationPage (FunctionApp app, EnergyShadow energyShadow) {
+  @DTLayout(content =
+      @GemRow(colGap = "16px", components=[
+        @FunctionTree(f=app.asset),
+        @GemColumn(width = "100%", rowGap = "16px", components = [
+          @Visualization(asset = app.selectedAsset),
+          @GemCard(
+            width = "100%",
+            title = "Available and used energy",
+            component = @ApexTopicVisualization(
+              availableEnergy = energyShadow.availableEnergy,
+              usedEnergy = getUsedEnergyStream()
+            )
+          ),
+          @GemCard(
+            width = "100%",
+            title = "Energy difference",
+            component = @ApexEnergyDifferenceVisualization(
+              energyDifference = energyShadow.energyDifference
+            )
+          )
+        ])
+      ])
+  );
+}

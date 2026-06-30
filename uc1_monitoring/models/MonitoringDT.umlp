@@ -1,0 +1,24 @@
+/* (c) https://github.com/MontiCore/monticore */
+import FunctionStructure4Fenix.*;
+import java.time.LocalDateTime;
+
+<<extends = "FunctionStructure4Fenix">>
+umlp MonitoringDT {
+  <<singleton>>
+  class EnergyShadow {
+    Optional<DoubleStream> availableEnergy;
+    Optional<DoubleStream> energyDifference;
+  }
+
+  <<singleton>>
+  class LimitConfiguration {
+    double warnLimit = 1100.0;
+    double errorLimit = 100.0;
+  }
+
+  class Notification {
+    LocalDateTime issued;
+    String content;
+    boolean seen;
+  }
+}

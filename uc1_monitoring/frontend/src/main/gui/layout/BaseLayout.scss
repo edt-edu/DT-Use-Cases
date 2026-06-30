@@ -1,0 +1,52 @@
+@import "@umlp/theme/src/main/gui/mc/fenix/theme/variables";
+
+.mainApp {
+  flex-direction: column;
+  min-height: 100vh;
+  max-height: 100vh;
+  height: 100vh;
+  display: flex;
+  margin: 0;
+}
+
+.header {
+  flex: 1;
+  background-color: $rwth-blue-4;
+}
+
+.logoLeftContainer {
+  display: flex;
+}
+
+.logoLeft {
+  align-self: flex-end;
+}
+
+.logoRight {
+  margin-right: 10px;
+  height: 60px;
+}
+
+.body {
+  flex: auto;
+  vertical-align: top;
+}
+
+.main {
+  height: 100%;
+}
+
+.footer {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-weight: lighter;
+  min-height: 50px;
+  background-color: $rwth-blue-4;
+}
+
+.nav {
+  background-color: $rwth-blue-3;
+  max-width: 150px !important;
+  width: auto;
+}

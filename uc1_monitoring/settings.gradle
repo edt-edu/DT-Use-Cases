@@ -1,0 +1,25 @@
+pluginManagement {
+    repositories {
+        if (("true").equals(getProperty('useLocalRepo'))) {
+            mavenLocal()
+        }
+        maven {
+            credentials.username mavenUser
+            credentials.password mavenPassword
+            url repo
+        }
+        gradlePluginPortal()
+        mavenCentral()
+
+        // for the native image example
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+}
+
+
+rootProject.name = 'MyMontiGemApp'
+include ":backend"
+include ":frontend"
+include ":energy-usage-mock"
+include ":smart-energy-grid-mock"

@@ -1,0 +1,32 @@
+package viz;
+
+import mc.fenix.functiondisplay.FunctionStructure4Fenix.*;
+
+import mc.fenix.arrange.GemTreeNode;
+import mc.fenix.arrange.GemRow;
+import mc.fenix.basic.GemText;
+import mc.fenix.basic.GemIcon;
+
+page FunctionTree(FunctionApp app, Function f) {
+  @guard(hasSubfunctions(f)){
+    @GemTreeNode(
+      isExpanded = true,
+      content = @GemText(value=f.name),
+      onClick = selectAsset(f),
+      children = [
+      @iterate(Function subfunction : f.subFunction){
+        @FunctionTree(f=subfunction);
+      }
+    ]);
+  } else {
+      @GemTreeNode(
+        content=@GemRow(colGap="5px", components = [
+          @GemIcon(name = "chevron_right", color="rgba(0, 0, 0, 0.3)"),
+          @GemText(value = f.name)
+        ]),
+        onClick = selectAsset(f)
+      );
+  }
+}
+
+

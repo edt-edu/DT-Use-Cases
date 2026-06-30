@@ -1,0 +1,64 @@
+plugins {
+  id 'de.rwth.se.montigem-backend' version "$mc_version"
+  id 'com.google.cloud.tools.jib' version '3.2.1'
+  id 'org.springframework.boot' version "$spring_version"
+  id "de.rwth.se.montigem-dt" version "$mc_version"
+  id "cd2pojo" version "$mc_version"
+  id "montiarc-jsim" version "$mc_version"
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+jib {
+  container.mainClass = application.mainClass.get()
+}
+
+jib {
+  extraDirectories.paths{
+    path {
+      from = "../models/functional/"
+      into = "/models/functional/"
+    }
+  }
+}
+
+dependencies {
+  implementation "montiarc.libraries:simulator-rte:7.9.0-SNAPSHOT"
+  implementation "de.se-rwth.fischertechnik:fischertechnik-gateway:7.8.0-SNAPSHOT"
+  implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+
+  def withoutSpringLogging = {
+    exclude module: 'spring-boot-starter-logging'
+    exclude module: 'logback-classic'
+  }
+
+  // Spring Boot Dependencies
+  implementation 'com.h2database:h2:2.1.214'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+
+  implementation 'org.apache.poi:poi:5.0.0'
+  implementation 'org.apache.poi:poi-ooxml:5.0.0'
+
+  // Spring Boot Dependencies
+  compileOnly group: 'org.springframework.boot', name: 'spring-boot-devtools', version: spring_version, withoutSpringLogging
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_version, withoutSpringLogging
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: spring_version, withoutSpringLogging
+  api group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version: spring_version, withoutSpringLogging
+  api group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_version, withoutSpringLogging
+
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1', withoutSpringLogging
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher', withoutSpringLogging
+}
+
+tasks.named("dtgen") {
+  jsimIntegration.set(true)
+}
+
+group = 'de.se-rwth.dt.labdt'
+tasks.jar {
+  archiveBaseName.set("labdt-backend")
+}

@@ -1,0 +1,9 @@
+package components;
+
+import FunctionStructure4Fenix.DoubleStream;
+
+component ApexEnergyDifferenceVisualization(
+  DoubleStream energyDifference
+){
+
+}

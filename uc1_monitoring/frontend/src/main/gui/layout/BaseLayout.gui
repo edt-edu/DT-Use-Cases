@@ -1,0 +1,23 @@
+/* (c) https://github.com/MontiCore/monticore */
+package layout;
+
+import mc.fenix.arrange.GemColumn;
+import mc.fenix.arrange.GemRow;
+import mc.fenix.basic.GemText;
+import mc.fenix.basic.GemImage;
+
+page BaseLayout (GUIViewElement content, GUIViewElement navigation) {
+  mainApp@GemColumn(height = "100vh", components = [
+    header@GemRow(hAlign = "space-evenly", components = [
+      logoLeftContainer@GemColumn(vAlign = "bottom",
+        component = logoLeft@GemText(weight = "bold", size = "1.5rem", color = "#00549F",
+          value = "Digital Twin Demo")
+      ),
+      logoRight@GemImage(height = "70px", source = "assets/images/logo/rwth_se_rgb.png")
+    ]),
+    body@GemRow(components = [
+      nav@GemColumn(component = navigation),
+      main@GemColumn(component = content)
+    ])
+  ]);
+}

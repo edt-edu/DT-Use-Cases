@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  column-gap: 5px;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  padding: 5px;
+  flex: 1;
+}
+
+.my-nav {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+
+footer {
+  padding: 10px;
+  text-align: center;
+  font-weight: lighter;
+  min-height: 50px;
+}

@@ -1,0 +1,10 @@
+package components;
+
+import FunctionStructure4Fenix.DoubleStream;
+
+component ApexTopicVisualization(
+  DoubleStream availableEnergy,
+  DoubleStream usedEnergy
+){
+
+}

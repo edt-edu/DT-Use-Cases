@@ -1,0 +1,30 @@
+plugins {
+  id 'java'
+  id 'application'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+application {
+  mainClass = 'de.serwth.dt.energyusagemock.EnergyUsageMockApplication'
+}
+
+dependencies {
+  implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+}
+
+group = 'de.se-rwth.dt.labdt'
+
+tasks.jar {
+  archiveBaseName.set("energy-usage-mock")
+}
+
+tasks.test {
+  useJUnitPlatform()
+}

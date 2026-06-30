@@ -1,0 +1,47 @@
+/* (c) https://github.com/MontiCore/monticore */
+plugins {
+  id 'base'
+  id "de.rwth.se.montigem-dt-model" version "$mc_version"
+}
+
+allprojects {
+  repositories {
+    if (findProperty('useLocalRepo') == 'true') {
+      mavenLocal()
+    }
+
+    maven {
+      credentials {
+        username = mavenUser
+        password = mavenPassword
+      }
+      url = uri(repo)
+    }
+
+    mavenCentral()
+  }
+}
+
+subprojects {
+  tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.warnings = false
+  }
+
+  configurations {
+    all {
+      exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+      exclude group: 'ch.qos.logback', module: 'logback-classic'
+      exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+  }
+
+  // unneeded spring archives
+  gradle.taskGraph.whenReady {
+    it.getAllTasks().findAll { ["distZip", "distTar", "bootDistZip", "bootDistTar"].contains(it.name) }.each{ it.enabled = false }
+  }
+}
+
+clean.dependsOn(subprojects.collect { it.getTasksByName("clean", false) })
+
+build.dependsOn(subprojects.collect { it.getTasksByName("build", false) })

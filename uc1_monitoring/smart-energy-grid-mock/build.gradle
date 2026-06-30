@@ -1,0 +1,32 @@
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version "$spring_version"
+  id 'io.spring.dependency-management' version '1.1.7'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+dependencies {
+  def withoutSpringLogging = {
+    exclude module: 'spring-boot-starter-logging'
+    exclude module: 'logback-classic'
+  }
+
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_version, withoutSpringLogging
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: spring_version, withoutSpringLogging
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_version, withoutSpringLogging
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+group = 'de.se-rwth.dt.labdt'
+tasks.jar {
+  archiveBaseName.set("smart-energy-grid-mock")
+}

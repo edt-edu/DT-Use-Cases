@@ -1,0 +1,22 @@
+/* (c) https://github.com/MontiCore/monticore */
+package layout;
+
+import layout.BaseLayout;
+import base.navigation.BaseNavigation;
+import base.navigation.NavItemWithIcon;
+
+import mc.fenix.arrange.GemColumn;
+import mc.fenix.arrange.GemRow;
+import mc.fenix.basic.GemButton;
+
+page DTLayout (GUIViewElement content, String mockTarget = "/physical_twin_mock/PhysicalTwinMock") {
+  @BaseLayout(
+    content = @GemColumn(width = "100%", height = "100%", vAlign = "top", rowGap = "0", components = [
+      @GemColumn(width = "100%", height = "auto", vAlign = "top", component = content)
+    ]),
+    navigation = @BaseNavigation(navItems = {
+      functionVis@NavItemWithIcon(title = "Visualization", target = "/viz/VisualizationPage", icon= "show_chart", iconPath=null),
+      notifications@NavItemWithIcon(title = "Notifications", target = "/notifications/Notifications", icon = "notifications", iconPath = null)
+    })
+  );
+}
