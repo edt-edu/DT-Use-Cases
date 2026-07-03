@@ -1,0 +1,26 @@
+# Overlay profile for connecting the integrated app to a real MQTT broker.
+# Start with:
+#   gradle bootRun --args='--spring.profiles.active=integrated,mqtt'
+
+dt:
+  app:
+    start-gateways: true
+    polling:
+      enabled: true
+      interval-millis: 1000
+      reason: mqtt-periodic-cycle
+  mqtt:
+    enabled: true
+    auto-start: false
+    broker-uri: tcp://localhost:1883
+    client-id: dt-engine-mqtt-gateway
+    machine-id: 1-1-conveyor
+    machine-type: CONVEYOR_BELT
+
+    discovery-enabled: true
+    discovery-topic-filters:
+      - /1-1-conveyor/#
+    register-unknown-topics: true
+    infer-unknown-topic-value-type: true
+  mappings:
+    auto-map-discovered-gateway-data-points: true

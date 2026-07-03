@@ -1,0 +1,114 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+dt:
+  engine:
+    enabled: true
+    auto-start: false
+    component-id: dt-engine
+    description: Default Digital Twin engine
+
+  events:
+    enabled: true
+    persist: true
+    max-buffered-events: 500
+
+  mappings:
+    enabled: true
+    auto-seed: true
+    seed-mqtt-gateway-mappings: true
+    seed-conveyor-mapek-mappings: true
+    include-writable-mqtt-data-points: false
+    gateway-component-id: mqtt-gateway
+    model-component-id: aas-model-manager
+    database-component-id: sqlite-db
+    auto-map-discovered-gateway-data-points: true
+
+  synchronization:
+    enabled: true
+    auto-start: true
+    subscribe-to-events: true
+    bridge-gateways-to-event-bus: true
+    seed-mappings-on-startup: true
+    run-cycle-on-startup: false
+
+  mqtt:
+    enabled: false
+    auto-start: false
+    component-id: mqtt-gateway
+    description: MQTT gateway
+    broker-uri: tcp://localhost:1883
+    client-id: dt-engine-mqtt-gateway
+    machine-id: 1-1-conveyor
+    machine-type: CONVEYOR_BELT
+    topic-prefix: ""
+    qos: 0
+    retained: false
+    clean-session: true
+    connection-timeout-seconds: 10
+    keep-alive-interval-seconds: 30
+    operation-timeout-millis: 5000
+    allow-unknown-command-topics: false
+    discovery-enabled: false
+    discovery-topic-filters: []
+    register-unknown-topics: false
+    infer-unknown-topic-value-type: true
+    unknown-topic-value-type: STRING
+
+  aas:
+    enabled: false
+    auto-start: false
+    component-id: aas-model-manager
+    description: AAS-backed model manager
+    shell-id: dt-engine-aas
+    shell-id-short: DTEngineAas
+    data-submodel-id: dt-engine-aas:data
+    data-submodel-id-short: Data
+    state-submodel-id: dt-engine-aas:state
+    state-submodel-id-short: State
+    default-parent-path: null
+    auto-create-properties-from-gateway: true
+  sqlite:
+    enabled: false
+    auto-start: false
+    component-id: sqlite-db
+    model-manager-component-id: sqlite-model-manager
+    description: SQLite DT data store
+    model-manager-description: SQLite-backed model manager
+    jdbc-url: jdbc:sqlite:./data/dt-engine.sqlite
+    auto-create-properties-from-gateway: true
+    seed-mqtt-catalog: false
+    seed-mqtt-writable-commands: true
+    aas-repository-enabled: true
+  services:
+    manager:
+      enabled: false
+    conveyor-kpi-mapek:
+      enabled: false
+      service-id: conveyor-kpi-mapek
+      component-id: conveyor-kpi-mapek-service
+      description: MAPE-K service for conveyor transport time, productivity and integrity
+      start-signal-data-point-id: 1-1-conveyor.phototransistor-feed-station
+      end-signal-data-point-id: 1-1-conveyor.phototransistor-swap-station
+      position-data-point-ids: []
+      required-model-property-ids: []
+      payload-weight-kg: 1.0
+      baseline-payload-weight-kg: 1.0
+      nominal-transport-time-seconds: 5.0
+      warning-integrity-threshold-percent: 30.0
+      emergency-integrity-threshold-percent: 10.0
+      output-state-data-point-id: conveyor.state
+      output-transport-time-millis-data-point-id: conveyor.transport-time-ms
+      output-payload-weight-kg-data-point-id: conveyor.payload-weight-kg
+      output-productivity-data-point-id: conveyor.productivity-kg-per-second
+      output-integrity-percent-data-point-id: conveyor.integrity-percent
+  monitoring:
+    enabled: true
+    auto-start: true
+    register-with-service-manager: true
+    service-id: monitoring-rest
+    component-id: monitoring-rest-service
+    description: REST monitoring service for DT state and machine data
+    max-recent-events: 100
+    default-history-limit: 50

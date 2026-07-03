@@ -1,0 +1,1 @@
+python mqtt_conveyor_simulator.py --offset-pattern-ms 0,0,15000,55000 --cycles 0

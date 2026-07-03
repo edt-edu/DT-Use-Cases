@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DT Engine Monitoring</title>
+  <style>
+    :root { font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #f5f7fb; }
+    body { margin: 0; }
+    header { padding: 24px 32px; background: #172033; color: white; }
+    h1 { margin: 0 0 6px; font-size: 26px; }
+    main { padding: 24px 32px 48px; display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
+    section { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.08); }
+    .span-4 { grid-column: span 4; } .span-6 { grid-column: span 6; } .span-8 { grid-column: span 8; } .span-12 { grid-column: span 12; }
+    .state { font-size: 28px; font-weight: 700; margin: 8px 0; }
+    .UNKNOWN { color: #667085; } .NORMAL { color: #138a36; } .WARNING { color: #b7791f; } .EMERGENCY { color: #b42318; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #edf0f5; vertical-align: top; }
+    th { color: #667085; font-weight: 600; }
+    button { border: 0; border-radius: 10px; padding: 10px 14px; background: #172033; color: white; cursor: pointer; margin: 4px 4px 4px 0; }
+    button.secondary { background: #e8ebf2; color: #172033; }
+    input { border: 1px solid #cfd6e4; border-radius: 10px; padding: 9px 10px; margin: 4px; max-width: 110px; }
+    .metric { display: grid; gap: 4px; margin: 8px 0; }
+    .metric strong { font-size: 20px; }
+    .muted { color: #667085; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    pre { background: #111827; color: #f9fafb; border-radius: 12px; padding: 12px; overflow: auto; max-height: 240px; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 16px; } .span-4, .span-6, .span-8, .span-12 { grid-column: span 1; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>DT Engine Monitoring</h1>
+  <div class="muted">Integrated Spring Boot app: SQLite, AAS model manager, mappings, synchronizer, MAPE-K service and REST monitoring.</div>
+</header>
+<main>
+  <section class="span-4">
+    <h2>Conveyor state</h2>
+    <div id="state" class="state UNKNOWN">UNKNOWN</div>
+    <div class="grid">
+      <div class="metric"><span class="muted">Integrity</span><strong id="integrity">n/a</strong></div>
+      <div class="metric"><span class="muted">Transport time</span><strong id="transportTime">n/a</strong></div>
+      <div class="metric"><span class="muted">Payload</span><strong id="payload">n/a</strong></div>
+      <div class="metric"><span class="muted">Productivity</span><strong id="productivity">n/a</strong></div>
+    </div>
+  </section>
+
+  <section class="span-4">
+    <h2>App control</h2>
+    <button onclick="post('/api/app/start')">Start</button>
+    <button onclick="post('/api/app/cycle')">Run cycle</button>
+    <button class="secondary" onclick="post('/api/app/stop')">Stop</button>
+    <h3>Demo transport</h3>
+    <label>Duration s <input id="duration" value="5" type="number" step="0.1" min="0.1" /></label>
+    <label>Weight kg <input id="weight" value="1" type="number" step="0.1" min="0.1" /></label>
+    <button onclick="demoTransport()">Inject transport</button>
+    <p class="muted">Use short durations for NORMAL, long durations for WARNING/EMERGENCY.</p>
+  </section>
+
+  <section class="span-4">
+    <h2>Component health</h2>
+    <table><thead><tr><th>Component</th><th>Status</th><th>Alive</th></tr></thead><tbody id="components"></tbody></table>
+  </section>
+
+  <section class="span-8">
+    <h2>Machine data</h2>
+    <table><thead><tr><th>Data point</th><th>Latest value</th><th>Quality</th><th>Timestamp</th></tr></thead><tbody id="machineData"></tbody></table>
+  </section>
+
+  <section class="span-4">
+    <h2>Recent events</h2>
+    <table><thead><tr><th>Type</th><th>Source</th><th>Severity</th></tr></thead><tbody id="events"></tbody></table>
+  </section>
+
+  <section class="span-12">
+    <h2>Last action</h2>
+    <pre id="lastAction">No action yet.</pre>
+  </section>
+</main>
+<script>
+const fmt = (value, suffix = '') => value === null || value === undefined || value === '' ? 'n/a' : `${value}${suffix}`;
+const num = (value, digits = 2) => value === null || value === undefined || Number.isNaN(Number(value)) ? 'n/a' : Number(value).toFixed(digits);
+
+async function getJson(url) { const response = await fetch(url); if (!response.ok) throw new Error(await response.text()); return response.json(); }
+async function post(url, body) {
+  const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: body ? JSON.stringify(body) : undefined });
+  const text = await response.text();
+  let payload; try { payload = JSON.parse(text); } catch { payload = text; }
+  document.getElementById('lastAction').textContent = JSON.stringify(payload, null, 2);
+  await refresh();
+}
+async function demoTransport() {
+  const durationSeconds = Number(document.getElementById('duration').value || 5);
+  const payloadWeightKg = Number(document.getElementById('weight').value || 1);
+  await post('/api/app/demo/transport', { durationSeconds, payloadWeightKg, runEngineCycle: true });
+}
+function row(cells) { return `<tr>${cells.map(c => `<td>${c ?? ''}</td>`).join('')}</tr>`; }
+
+async function refresh() {
+  const [snapshot, status, events] = await Promise.all([
+    getJson('/api/monitoring/snapshot'),
+    getJson('/api/app/status'),
+    getJson('/api/monitoring/events?limit=20')
+  ]);
+  const state = snapshot.conveyor?.state || 'UNKNOWN';
+  const stateEl = document.getElementById('state');
+  stateEl.className = `state ${state}`;
+  stateEl.textContent = state;
+  document.getElementById('integrity').textContent = fmt(num(snapshot.conveyor?.integrityPercent), ' %');
+  document.getElementById('transportTime').textContent = fmt(snapshot.conveyor?.transportTimeMillis, ' ms');
+  document.getElementById('payload').textContent = fmt(num(snapshot.conveyor?.payloadWeightKg), ' kg');
+  document.getElementById('productivity').textContent = fmt(num(snapshot.conveyor?.productivityKgPerSecond), ' kg/s');
+
+  document.getElementById('components').innerHTML = status.components.map(c => row([`${c.id}<br><span class="muted">${c.type}</span>`, c.status, c.alive])).join('');
+  document.getElementById('machineData').innerHTML = (snapshot.machineData || []).slice(0, 60).map(d => row([d.id, JSON.stringify(d.latestValue), d.quality || '', d.timestamp || ''])).join('');
+  document.getElementById('events').innerHTML = events.slice(0, 20).map(e => row([e.type, e.source, e.severity])).join('');
+}
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>
