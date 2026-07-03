@@ -13,4 +13,4 @@ The paper describes three use cases:
   the disruption, and selects an alternative path where possible. The implementation is available at [`./uc2_replanning`](./uc2_replanning).
 - **UC3: Predictive maintenance** records operational signals such as motor
   speed and cycle timing, compares them with expected behavior, and uses the
-  results to support maintenance planning. The implementation is available at [`./uc3_predictive_maintenance`](./uc3_predictive_maintenance).
+  results to support maintenance planning. The implementation is available at [`./uc3_predictiveMaintenance`](./uc3_predictiveMaintenance).
