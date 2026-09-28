@@ -1,8 +1,8 @@
 plugins {
-  id 'de.rwth.se.montigem-backend' version "$mc_version"
+  id 'de.rwth.se.montigem-backend' version "$mg_version"
   id 'com.google.cloud.tools.jib' version '3.2.1'
   id 'org.springframework.boot' version "$spring_version"
-  id "de.rwth.se.montigem-dt" version "$mc_version"
+  id "de.rwth.se.montigem-dt" version "$mg_version"
   id "cd2pojo" version "$mc_version"
   id "montiarc-jsim" version "$mc_version"
 }

@@ -181,7 +181,8 @@ export class ApexEnergyDifferenceVisualization extends ApexEnergyDifferenceVisua
   private async loadExistingValues(stream: DoubleStream): Promise<void> {
     const values = stream.getDoubleValueList();
     const points: [number, number][] = [];
-    for (let i = 0; i < values.size(); i++) {
+    const size = await values.size();
+    for (let i = 0; i < size; i++) {
       const point = this.toPoint(await values.get(i));
       if (point !== null) {
         points.push(point);

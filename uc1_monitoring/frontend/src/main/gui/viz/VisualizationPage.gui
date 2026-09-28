@@ -14,9 +14,9 @@ import components.ApexEnergyDifferenceVisualization;
 
 page VisualizationPage (FunctionApp app, EnergyShadow energyShadow) {
   @DTLayout(content =
-      @GemRow(colGap = "16px", components=[
-        @FunctionTree(f=app.asset),
-        @GemColumn(width = "100%", rowGap = "16px", components = [
+      dashboardRow@GemRow(colGap = "16px", components=[
+        functionTree@FunctionTree(f=app.asset),
+        graphColumn@GemColumn(width = "100%", rowGap = "16px", components = [
           @Visualization(asset = app.selectedAsset),
           @GemCard(
             width = "100%",

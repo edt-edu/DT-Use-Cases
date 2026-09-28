@@ -198,7 +198,8 @@ export class ApexTopicVisualization extends ApexTopicVisualizationComponent impl
   private async loadExistingValues(stream: DoubleStream, seriesIndex: number): Promise<void> {
     const values = stream.getDoubleValueList();
     const points: [number, number][] = [];
-    for (let i = 0; i < values.size(); i++) {
+    const size = await values.size();
+    for (let i = 0; i < size; i++) {
       const point = this.toPoint(await values.get(i));
       if (point !== null) {
         points.push(point);

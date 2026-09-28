@@ -1,8 +1,8 @@
 /* (c) https://github.com/MontiCore/monticore */
 
 plugins {
-  id 'de.rwth.se.montigem-frontend' version "$mc_version"
-  id "de.rwth.se.montigem-dt-frontend" version "$mc_version"
+  id 'de.rwth.se.montigem-frontend' version "$mg_version"
+  id "de.rwth.se.montigem-dt-frontend" version "$mg_version"
 }
 
 java {
