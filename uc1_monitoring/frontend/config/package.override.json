@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "@umlp/functiondisplay": "^8.0.0"
+    "@umlp/functiondisplay": "^9.0.0",
+    "apexcharts": "6.0.0",
+    "three": "^0.175.0"
   }
 }

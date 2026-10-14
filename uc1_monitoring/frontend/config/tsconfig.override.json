@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "*": [
+        "umlpJava2ts/*",
+        "gui2java2ts/*",
+        "src/app/*",
+        "hwc/*",
+        "base/gui2java2ts/*",
+        "base/umlpJava2ts/*",
+        "base/hwc/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*",
+    "../../src/**/*.ts"
+  ]
+}
